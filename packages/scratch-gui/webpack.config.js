@@ -7,6 +7,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const ScratchWebpackConfigBuilder = require('scratch-webpack-configuration');
 
+const packageJson = require('./package.json');
+
 // const STATIC_PATH = process.env.STATIC_PATH || '/static';
 
 const commonHtmlWebpackPluginOptions = {
@@ -76,7 +78,13 @@ const baseConfig = new ScratchWebpackConfigBuilder(
         'process.env.DEBUG': Boolean(process.env.DEBUG),
         'process.env.GA_ID': `"${process.env.GA_ID || 'UA-000000-01'}"`,
         'process.env.GTM_ENV_AUTH': `"${process.env.GTM_ENV_AUTH || ''}"`,
-        'process.env.GTM_ID': process.env.GTM_ID ? `"${process.env.GTM_ID}"` : null
+        'process.env.GTM_ID': process.env.GTM_ID ? `"${process.env.GTM_ID}"` : null,
+        // Fork identity/build info, shown next to the logo in the menu bar (see lib/fork-info.js).
+        // FORK_COMMIT and FORK_BUILD_DATE are expected to be set by CI before this build runs;
+        // they're unset for local builds.
+        'process.env.FORK_VERSION': `"${process.env.FORK_VERSION || packageJson.version}"`,
+        'process.env.FORK_COMMIT': process.env.FORK_COMMIT ? `"${process.env.FORK_COMMIT}"` : null,
+        'process.env.FORK_BUILD_DATE': process.env.FORK_BUILD_DATE ? `"${process.env.FORK_BUILD_DATE}"` : null
     }))
     .addPlugin(new CopyWebpackPlugin({
         patterns: [

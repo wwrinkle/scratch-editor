@@ -1,0 +1,12 @@
+This project is a fork of scratch-editor (https://github.com/scratchfoundation/scratch-editor),
+Copyright (C) Scratch Foundation and contributors.
+
+The original project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0-only).
+See LICENSE for the full license text, which continues to apply to this fork and all modifications.
+
+Modifications in this fork ("Sonic Logic Academy" fork) are Copyright (C) Sonic Logic Academy and
+contributors, and are licensed under the same terms. See FORK_NOTES.md for a summary of what has
+been changed relative to upstream.
+
+This fork is not affiliated with, endorsed by, or sponsored by the Scratch Team or the Scratch
+Foundation. "Scratch" is a trademark of the Scratch Foundation.

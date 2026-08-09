@@ -1,8 +1,8 @@
 {
   "name": "scratch-editor",
-  "version": "15.0.1",
+  "version": "15.0.1+sonic-logic-academy.1",
   "private": "true",
-  "description": "Scratch editor mono-repository",
+  "description": "Scratch editor mono-repository (Sonic Logic Academy fork)",
   "keywords": [],
   "homepage": "https://github.com/scratchfoundation/scratch-editor#readme",
   "bugs": {

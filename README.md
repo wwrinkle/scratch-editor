@@ -6,6 +6,13 @@ Scratch project by pressing "Create" on that website or by visiting <https://scr
 This is a source code repository for the packages that make up the Scratch editor and a few additional support
 packages. Use this if you'd like to learn about how the Scratch editor works or to contribute to its development.
 
+## About this fork
+
+This repository is a **Sonic Logic Academy fork** of the upstream
+[scratchfoundation/scratch-editor](https://github.com/scratchfoundation/scratch-editor). It is not affiliated with
+or endorsed by the Scratch Team or the Scratch Foundation. See [FORK_NOTES.md](FORK_NOTES.md) for what's different,
+including the piano roll visualizer added in `scratch-gui`.
+
 ## What's in this repository?
 
 The `packages` directory in this repository contains:

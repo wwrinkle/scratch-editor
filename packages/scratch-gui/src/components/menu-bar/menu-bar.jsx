@@ -65,12 +65,14 @@ import dropdownCaret from './dropdown-caret.svg';
 import debugIcon from '../debug-modal/icons/icon--debug.svg';
 
 import scratchLogo from './scratch-logo.svg';
-import scratchLogoAndroid from './scratch-logo-android.svg';
+import forkLogo from './fork-logo.svg';
+import forkLogoAndroid from './fork-logo-android.svg';
 import ninetiesLogo from './nineties_logo.svg';
 import catLogo from './cat_logo.svg';
 import prehistoricLogo from './prehistoric-logo.svg';
 import oldtimeyLogo from './oldtimey-logo.svg';
 
+import forkInfo from '../../lib/fork-info';
 import sharedMessages from '../../lib/shared-messages';
 
 import {AccountMenuOptionsPropTypes} from '../../lib/account-menu-options';
@@ -99,7 +101,7 @@ const ariaMessages = defineMessages({
     }
 });
 
-const getScratchLogo = platform => (platform === PLATFORM.ANDROID ? scratchLogoAndroid : scratchLogo);
+const getScratchLogo = platform => (platform === PLATFORM.ANDROID ? forkLogoAndroid : forkLogo);
 
 const MenuBarItemTooltip = ({
     children,
@@ -342,6 +344,21 @@ class MenuBar extends React.Component {
                                 src={getScratchLogo(this.props.platform)}
                             />
                         </button>
+                        <div
+                            className={classNames(styles.menuBarItem, styles.forkInfo)}
+                            title={[forkInfo.commit, forkInfo.buildDate].filter(Boolean).join(' · ') || null}
+                        >
+                            <FormattedMessage
+                                defaultMessage="{forkName} · {forkFeature} · v{forkVersion}"
+                                description="Fork name, feature, and version shown next to the logo"
+                                id="gui.menuBar.forkInfo"
+                                values={{
+                                    forkName: forkInfo.name,
+                                    forkFeature: forkInfo.feature,
+                                    forkVersion: forkInfo.version
+                                }}
+                            />
+                        </div>
                         {(this.props.canChangeColorMode || this.props.canChangeLanguage || this.props.canChangeTheme) &&
                         (<SettingsMenu
                             canChangeLanguage={this.props.canChangeLanguage}
