@@ -12,6 +12,7 @@ import {setProjectChanged, setProjectUnchanged} from '../reducers/project-change
 import {setRunningState, setTurboState, setStartedState} from '../reducers/vm-status';
 import {showExtensionAlert, showStandardAlert, closeAlertWithId} from '../reducers/alerts';
 import {updateMicIndicator} from '../reducers/mic-indicator';
+import {addPianoRollNote} from '../reducers/piano-roll';
 
 /*
  * Higher Order Component to manage events emitted by the VM
@@ -46,6 +47,7 @@ const vmListenerHOC = function (WrappedComponent) {
             this.props.vm.on('PROJECT_START', this.props.onGreenFlag);
             this.props.vm.on('PERIPHERAL_CONNECTION_LOST_ERROR', this.props.onShowExtensionAlert);
             this.props.vm.on('MIC_LISTENING', this.props.onMicListeningUpdate);
+            this.props.vm.on('MUSIC_NOTE_PLAYED', this.props.onMusicNotePlayed);
             this.props.vm.on('EXTENSION_DATA_LOADING', this.props.onExtensionDataLoading);
 
         }
@@ -80,6 +82,7 @@ const vmListenerHOC = function (WrappedComponent) {
             this.props.vm.removeListener('PROJECT_START', this.props.onGreenFlag);
             this.props.vm.removeListener('PERIPHERAL_CONNECTION_LOST_ERROR', this.props.onShowExtensionAlert);
             this.props.vm.removeListener('MIC_LISTENING', this.props.onMicListeningUpdate);
+            this.props.vm.removeListener('MUSIC_NOTE_PLAYED', this.props.onMusicNotePlayed);
             this.props.vm.removeListener('EXTENSION_DATA_LOADING', this.props.onExtensionDataLoading);
 
             if (this.props.attachKeyboardEvents) {
@@ -156,6 +159,7 @@ const vmListenerHOC = function (WrappedComponent) {
                 onTurboModeOff,
                 onTurboModeOn,
                 onShowExtensionAlert,
+                onMusicNotePlayed,
 
                 ...props
             } = this.props;
@@ -171,6 +175,7 @@ const vmListenerHOC = function (WrappedComponent) {
         onKeyUp: PropTypes.func,
         onMicListeningUpdate: PropTypes.func.isRequired,
         onMonitorsUpdate: PropTypes.func.isRequired,
+        onMusicNotePlayed: PropTypes.func.isRequired,
         onProjectChanged: PropTypes.func.isRequired,
         onProjectRunStart: PropTypes.func.isRequired,
         onProjectRunStop: PropTypes.func.isRequired,
@@ -227,6 +232,9 @@ const vmListenerHOC = function (WrappedComponent) {
         },
         onMicListeningUpdate: listening => {
             dispatch(updateMicIndicator(listening));
+        },
+        onMusicNotePlayed: note => {
+            dispatch(addPianoRollNote(note));
         },
         onExtensionDataLoading: loading => {
             if (loading) {

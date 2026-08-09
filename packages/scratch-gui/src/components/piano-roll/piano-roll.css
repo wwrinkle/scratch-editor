@@ -1,0 +1,168 @@
+.pianoRollPanel {
+    margin-top: 1rem;
+    border: 1px solid #d6d6d6;
+    border-radius: 1rem;
+    background-color: white;
+    min-height: 10rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.pianoRollHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e6e6e6;
+    background-color: #f7f7f7;
+    border-radius: 1rem 1rem 0 0;
+}
+
+.pianoRollTitle {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.pianoRollBody {
+    padding: 1rem;
+    flex: 1;
+    min-height: 8rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.pianoRollPlaceholder {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.4rem;
+}
+
+.pianoRollGraph {
+    display: flex;
+    align-items: flex-start;
+    height: 16rem;
+    border: 1px solid #ececec;
+    border-radius: 0.75rem;
+    overflow: auto;
+    background: white;
+}
+
+.pianoRollGutter {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    flex: 0 0 6.5rem;
+    width: 6.5rem;
+    border-right: 1px solid #e2e2e2;
+    background: #fafafa;
+}
+
+.pianoRollGutterRow {
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: stretch;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.pianoRollKeyLane {
+    position: relative;
+    flex: 0 0 3.25rem;
+    box-sizing: border-box;
+    background: #fdfdfd;
+    border-bottom: 1px solid #ededed;
+}
+
+.pianoRollKeyBlackCap {
+    position: absolute;
+    left: 0;
+    top: 1px;
+    bottom: 1px;
+    width: 60%;
+    background: #6b6b6b;
+    border-radius: 0 2px 2px 0;
+}
+
+.pianoRollGutterLabel {
+    min-width: 0;
+    margin-left: auto;
+    padding-right: 0.35rem;
+    padding-left: 0.35rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.55rem;
+    line-height: 1;
+    color: #888;
+    white-space: nowrap;
+    align-self: center;
+}
+
+.pianoRollTrack {
+    position: relative;
+    flex: 0 0 auto;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+    transition: width 0.15s ease;
+}
+
+.pianoRollRowWhite,
+.pianoRollRowBlack {
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.pianoRollRowWhite {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.pianoRollRowBlack {
+    background-color: rgba(0, 0, 0, 0.045);
+}
+
+.pianoRollLaneDivider {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.pianoRollNoteBar {
+    position: absolute;
+    box-sizing: border-box;
+    border-radius: 0.25rem;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+    transition: left 0.15s ease, width 0.15s ease;
+}
+
+.pianoRollNoteBarLabel {
+    /* Row height is too tight to fit a readable label inside the bar itself,
+       and growing the row would grow the whole keyboard/grid. Float the
+       label just above the bar instead, so it gets its own breathing room.
+       Also lets it overflow evenly past narrow bars (e.g. short drum hits)
+       instead of clipping one side. */
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 1px);
+    transform: translateX(-50%);
+    color: rgba(0, 0, 0, 0.75);
+    font-size: 0.55rem;
+    line-height: 1;
+    font-weight: 600;
+    white-space: nowrap;
+    text-shadow:
+        0 1px 2px rgba(255, 255, 255, 0.9),
+        0 0 2px rgba(255, 255, 255, 0.9);
+    pointer-events: none;
+}
+
+.closeButton {
+    border: none;
+    background: none;
+    color: #333;
+    cursor: pointer;
+    font-weight: 600;
+}

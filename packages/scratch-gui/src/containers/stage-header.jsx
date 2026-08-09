@@ -5,6 +5,7 @@ import VM from '@scratch/scratch-vm';
 import {STAGE_SIZE_MODES} from '../lib/layout-constants';
 import {setStageSize} from '../reducers/stage-size';
 import {setFullScreen} from '../reducers/mode';
+import {togglePianoRoll} from '../reducers/piano-roll';
 
 import {connect} from 'react-redux';
 
@@ -21,14 +22,47 @@ class StageHeader extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
-            'handleKeyPress'
+            'handleKeyPress',
+            'handleExtensionAdded'
         ]);
+        this.state = {
+            isMusicExtensionLoaded: props.vm && props.vm.extensionManager &&
+                typeof props.vm.extensionManager.isExtensionLoaded === 'function' &&
+                props.vm.extensionManager.isExtensionLoaded('music')
+        };
     }
     componentDidMount () {
         document.addEventListener('keydown', this.handleKeyPress);
+        if (this.props.vm && typeof this.props.vm.on === 'function') {
+            this.props.vm.on('EXTENSION_ADDED', this.handleExtensionAdded);
+        }
+    }
+    componentDidUpdate (prevProps) {
+        if (this.props.vm !== prevProps.vm) {
+            if (prevProps.vm && typeof prevProps.vm.removeListener === 'function') {
+                prevProps.vm.removeListener('EXTENSION_ADDED', this.handleExtensionAdded);
+            }
+            if (this.props.vm && typeof this.props.vm.on === 'function') {
+                this.props.vm.on('EXTENSION_ADDED', this.handleExtensionAdded);
+            }
+            const isMusicExtensionLoaded = this.props.vm && this.props.vm.extensionManager &&
+                typeof this.props.vm.extensionManager.isExtensionLoaded === 'function' &&
+                this.props.vm.extensionManager.isExtensionLoaded('music');
+            if (isMusicExtensionLoaded && !this.state.isMusicExtensionLoaded) {
+                this.setState({isMusicExtensionLoaded});
+            }
+        }
     }
     componentWillUnmount () {
         document.removeEventListener('keydown', this.handleKeyPress);
+        if (this.props.vm && typeof this.props.vm.removeListener === 'function') {
+            this.props.vm.removeListener('EXTENSION_ADDED', this.handleExtensionAdded);
+        }
+    }
+    handleExtensionAdded (categoryInfo) {
+        if (categoryInfo && categoryInfo.id === 'music') {
+            this.setState({isMusicExtensionLoaded: true});
+        }
     }
     handleKeyPress (event) {
         if (event.key === 'Escape' && this.props.isFullScreen) {
@@ -43,6 +77,7 @@ class StageHeader extends React.Component {
             <StageHeaderComponent
                 {...props}
                 onKeyPress={this.handleKeyPress}
+                pianoRollAvailable={this.state.isMusicExtensionLoaded}
             />
         );
     }
@@ -78,7 +113,8 @@ const mapDispatchToProps = dispatch => ({
     onSetStageUnFull: () => dispatch(setFullScreen(false)),
     onShowSettingThumbnail: () => dispatch(showStandardAlert(ALERT_ID.settingThumbnail)),
     onShowThumbnailSuccess: () => showAlertWithTimeout(dispatch, ALERT_ID.thumbnailSuccess),
-    onShowThumbnailError: () => showAlertWithTimeout(dispatch, ALERT_ID.thumbnailError)
+    onShowThumbnailError: () => showAlertWithTimeout(dispatch, ALERT_ID.thumbnailError),
+    onTogglePianoRoll: () => dispatch(togglePianoRoll())
 });
 
 export default connect(

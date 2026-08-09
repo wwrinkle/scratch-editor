@@ -6,6 +6,12 @@ const formatMessage = require('format-message');
 const MathUtil = require('../../util/math-util');
 const Timer = require('../../util/timer');
 
+const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const INSTRUMENT_COLORS = [
+    '#5b8bff', '#4bc0c8', '#f3b84b', '#f26d6d', '#a66ff0', '#61d293',
+    '#59b4ff', '#f4994a', '#b76cff', '#57a8ff', '#ee6ebb', '#90c04c'
+];
+
 /**
  * The instrument and drum sounds, loaded as static assets.
  * @type {object}
@@ -1001,6 +1007,18 @@ class Scratch3MusicBlocks {
             player.take();
         }
 
+        const displayName = this.DRUM_INFO[drumNum].name;
+
+        this.runtime.emit('MUSIC_NOTE_PLAYED', {
+            type: 'drum',
+            drumNum,
+            duration: 0.25,
+            instrument: drumNum,
+            displayName,
+            color: '#f29f5a',
+            timestamp: Date.now()
+        });
+
         const engine = util.runtime.audioEngine;
         const context = engine.audioContext;
         const volumeGain = context.createGain();
@@ -1109,6 +1127,20 @@ class Scratch3MusicBlocks {
             this._instrumentPlayerNoteArrays[inst][note] = this._instrumentPlayerArrays[inst][sampleIndex].take();
         }
 
+        const displayName = this._getMidiNoteName(note);
+        const noteColor = INSTRUMENT_COLORS[inst % INSTRUMENT_COLORS.length];
+
+        // Emit a piano roll event for live UI rendering.
+        this.runtime.emit('MUSIC_NOTE_PLAYED', {
+            type: 'note',
+            note,
+            duration: durationSec,
+            instrument: inst,
+            displayName,
+            color: noteColor,
+            timestamp: Date.now()
+        });
+
         const player = this._instrumentPlayerNoteArrays[inst][note];
 
         if (player.isPlaying && !player.isStarting) {
@@ -1157,6 +1189,12 @@ class Scratch3MusicBlocks {
         player.outputNode.playbackRate.value = notePitchInterval;
         // Schedule playback to stop.
         player.outputNode.stop(releaseEnd);
+    }
+
+    _getMidiNoteName (note) {
+        const octave = Math.floor(note / 12) - 1;
+        const pitch = NOTE_NAMES[note % 12];
+        return `${pitch}${octave}`;
     }
 
     /**

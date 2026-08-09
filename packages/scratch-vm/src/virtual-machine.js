@@ -117,6 +117,9 @@ class VirtualMachine extends EventEmitter {
         this.runtime.on(Runtime.BLOCKSINFO_UPDATE, categoryInfo => {
             this.emit(Runtime.BLOCKSINFO_UPDATE, categoryInfo);
         });
+        this.runtime.on('MUSIC_NOTE_PLAYED', musicEvent => {
+            this.emit('MUSIC_NOTE_PLAYED', musicEvent);
+        });
         this.runtime.on(Runtime.BLOCKS_NEED_UPDATE, () => {
             this.emitWorkspaceUpdate();
         });

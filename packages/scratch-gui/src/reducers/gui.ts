@@ -30,6 +30,7 @@ import toolboxReducer, {toolboxInitialState} from './toolbox';
 import vmReducer, {vmInitialState} from './vm';
 import vmStatusReducer, {vmStatusInitialState} from './vm-status';
 import workspaceMetricsReducer, {workspaceMetricsInitialState} from './workspace-metrics';
+import pianoRollReducer, {pianoRollInitialState} from './piano-roll';
 import throttle from 'redux-throttle';
 
 import decks from '../lib/libraries/decks/index.jsx';
@@ -65,6 +66,7 @@ const buildInitialState = (config: GUIConfig) => ({
     targets: targetsInitialState,
     settings: settingsInitialState,
     timeout: timeoutInitialState,
+    pianoRoll: pianoRollInitialState,
     timeTravel: timeTravelInitialState,
     toolbox: toolboxInitialState,
     vm: vmInitialState(config),
@@ -179,7 +181,8 @@ const guiReducer = combineReducers({
     toolbox: toolboxReducer,
     vm: vmReducer,
     vmStatus: vmStatusReducer,
-    workspaceMetrics: workspaceMetricsReducer
+    workspaceMetrics: workspaceMetricsReducer,
+    pianoRoll: pianoRollReducer
 });
 
 export {

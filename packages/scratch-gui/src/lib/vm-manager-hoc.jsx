@@ -35,6 +35,13 @@ const vmManagerHOC = function (WrappedComponent) {
                 this.props.vm.initialized = true;
                 this.props.vm.setLocale(this.props.locale, this.props.messages);
             }
+            if (this.props.vm.extensionManager &&
+                typeof this.props.vm.extensionManager.isExtensionLoaded === 'function' &&
+                !this.props.vm.extensionManager.isExtensionLoaded('music')) {
+                this.props.vm.extensionManager.loadExtensionURL('music').catch(e => {
+                    console.error('Failed to load music extension:', e);
+                });
+            }
             if (!this.props.isPlayerOnly && !this.props.isStarted) {
                 this.props.vm.start();
             }

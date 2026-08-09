@@ -14,6 +14,7 @@ import fullScreenIcon from './icon--fullscreen.svg';
 import largeStageIcon from './icon--large-stage.svg';
 import smallStageIcon from './icon--small-stage.svg';
 import unFullScreenIcon from './icon--unfullscreen.svg';
+import pianoRollIcon from './icon--piano-roll.svg';
 
 import scratchLogo from '../menu-bar/scratch-logo.svg';
 import styles from './stage-header.css';
@@ -77,6 +78,11 @@ const messages = defineMessages({
         defaultMessage: 'Full Screen Control',
         description: 'Button to enter/exit full screen mode',
         id: 'gui.stageHeader.fullscreenControl'
+    },
+    pianoRollToggle: {
+        defaultMessage: 'Toggle piano roll',
+        description: 'Tooltip for the piano roll toggle button',
+        id: 'gui.stageHeader.pianoRollToggle'
     }
 });
 
@@ -103,9 +109,15 @@ const StageHeaderComponent = function (props) {
         username,
         onShowSettingThumbnail,
         onShowThumbnailSuccess,
-        onShowThumbnailError
+        onShowThumbnailError,
+        onTogglePianoRoll,
+        pianoRollAvailable
     } = props;
     const intl = useIntl();
+
+    const isPianoRollAvailable = typeof pianoRollAvailable === 'boolean' ? pianoRollAvailable :
+        vm && vm.extensionManager && typeof vm.extensionManager.isExtensionLoaded === 'function' &&
+        vm.extensionManager.isExtensionLoaded('music');
 
     const containerRef = useRef(null);
     const {trapFocus, releaseFocus} = useFocusTrap(containerRef, 'data-focusable');
@@ -346,6 +358,20 @@ const StageHeaderComponent = function (props) {
                                     title={intl.formatMessage(messages.fullscreenControl)}
                                 />
                             </Button>
+                            {isPianoRollAvailable ? (
+                                <Button
+                                    className={styles.stageButton}
+                                    onClick={onTogglePianoRoll}
+                                >
+                                    <img
+                                        alt={intl.formatMessage(messages.pianoRollToggle)}
+                                        className={styles.stageButtonIcon}
+                                        draggable={false}
+                                        src={pianoRollIcon}
+                                        title={intl.formatMessage(messages.pianoRollToggle)}
+                                    />
+                                </Button>
+                            ) : null}
                         </div>
                     </div>
                 </Box>
@@ -368,7 +394,9 @@ StageHeaderComponent.propTypes = {
     onSetStageLarge: PropTypes.func.isRequired,
     onSetStageSmall: PropTypes.func.isRequired,
     onSetStageUnFull: PropTypes.func.isRequired,
+    onTogglePianoRoll: PropTypes.func,
     onUpdateProjectThumbnail: PropTypes.func,
+    pianoRollAvailable: PropTypes.bool,
     projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     showBranding: PropTypes.bool.isRequired,
     showNewFeatureCallouts: PropTypes.bool,
