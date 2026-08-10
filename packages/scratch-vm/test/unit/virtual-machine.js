@@ -1252,6 +1252,20 @@ test('Starting the VM emits an event', t => {
     t.end();
 });
 
+test('MUSIC_NOTE_PLAYED events from the runtime are relayed on the vm', t => {
+    const vm = new VirtualMachine();
+    let received = null;
+    vm.addListener('MUSIC_NOTE_PLAYED', musicEvent => {
+        received = musicEvent;
+    });
+
+    const musicEvent = {type: 'note', note: 60, displayName: 'C4'};
+    vm.runtime.emit('MUSIC_NOTE_PLAYED', musicEvent);
+
+    t.equal(received, musicEvent);
+    t.end();
+});
+
 test('vm.greenFlag() emits a PROJECT_START event', t => {
     let greenFlagged = false;
     const vm = new VirtualMachine();

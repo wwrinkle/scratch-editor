@@ -34,6 +34,7 @@ describe('VMManagerHOC', () => {
         vm.setCompatibilityMode = jest.fn();
         vm.setLocale = jest.fn();
         vm.start = jest.fn();
+        vm.extensionManager.loadExtensionURL = jest.fn(() => Promise.resolve());
     });
     test('when it mounts in player mode, the vm is initialized but not started', () => {
         const Component = () => (<div />);
@@ -137,6 +138,33 @@ describe('VMManagerHOC', () => {
             />
         );
         expect(vm.start).not.toHaveBeenCalled();
+    });
+    test('if the music extension is not loaded, it is auto-loaded on mount', () => {
+        const Component = () => <div />;
+        const WrappedComponent = vmManagerHOC(Component);
+        render(
+            <WrappedComponent
+                isPlayerOnly={false}
+                isStarted={false}
+                store={store}
+                vm={vm}
+            />
+        );
+        expect(vm.extensionManager.loadExtensionURL).toHaveBeenCalledWith('music');
+    });
+    test('if the music extension is already loaded, it is not loaded again on mount', () => {
+        vm.extensionManager.isExtensionLoaded = jest.fn(() => true);
+        const Component = () => <div />;
+        const WrappedComponent = vmManagerHOC(Component);
+        render(
+            <WrappedComponent
+                isPlayerOnly={false}
+                isStarted={false}
+                store={store}
+                vm={vm}
+            />
+        );
+        expect(vm.extensionManager.loadExtensionURL).not.toHaveBeenCalled();
     });
     test('if the isLoadingWithId prop becomes true, it loads project data into the vm', () => {
         vm.loadProject = jest.fn(() => Promise.resolve());

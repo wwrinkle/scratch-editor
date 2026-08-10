@@ -38,6 +38,22 @@ describe('VMListenerHOC', () => {
         expect(onGreenFlag).toHaveBeenCalled();
     });
 
+    test('vm MUSIC_NOTE_PLAYED event dispatches an addPianoRollNote action', () => {
+        const Component = () => (<div />);
+        const WrappedComponent = vmListenerHOC(Component);
+        render(
+            <WrappedComponent
+                store={store}
+                vm={vm}
+            />
+        );
+        const note = {type: 'note', note: 60, duration: 0.25, timestamp: 0, displayName: 'C4', color: '#fff'};
+        vm.emit('MUSIC_NOTE_PLAYED', note);
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual('scratch-gui/piano-roll/ADD_PIANO_ROLL_NOTE');
+        expect(actions[0].note).toEqual(note);
+    });
+
     test('onGreenFlag is not passed to the children', () => {
         const Component = ({onGreenFlag}) => (
             <div id="onGreenFlag">{`${onGreenFlag ?

@@ -39,6 +39,7 @@ const vmManagerHOC = function (WrappedComponent) {
                 typeof this.props.vm.extensionManager.isExtensionLoaded === 'function' &&
                 !this.props.vm.extensionManager.isExtensionLoaded('music')) {
                 this.props.vm.extensionManager.loadExtensionURL('music').catch(e => {
+                    // eslint-disable-next-line no-console
                     console.error('Failed to load music extension:', e);
                 });
             }

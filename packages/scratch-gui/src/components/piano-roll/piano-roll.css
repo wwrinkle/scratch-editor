@@ -46,6 +46,14 @@
     border-radius: 0.75rem;
     overflow: auto;
     background: white;
+
+    /*
+       Without this, the growing .pianoRollTrack's inline width feeds back into this
+       flex column's own (indefinite) width, which in turn grows the whole stage
+       column instead of scrolling internally. Containment stops that propagation so
+       the track only ever scrolls inside a size fixed by the surrounding layout.
+    */
+    contain: inline-size;
 }
 
 .pianoRollGutter {

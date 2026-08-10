@@ -177,12 +177,12 @@ const guiReducer = combineReducers({
     targets: targetReducer,
     settings: settingsReducer,
     timeout: timeoutReducer,
+    pianoRoll: pianoRollReducer,
     timeTravel: timeTravelReducer,
     toolbox: toolboxReducer,
     vm: vmReducer,
     vmStatus: vmStatusReducer,
-    workspaceMetrics: workspaceMetricsReducer,
-    pianoRoll: pianoRollReducer
+    workspaceMetrics: workspaceMetricsReducer
 });
 
 export {
