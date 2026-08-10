@@ -118,6 +118,11 @@
     cursor: default;
 }
 
+.fork-info-logo {
+    margin-right: 0.15rem;
+    vertical-align: middle;
+}
+
 .menu-bar-menu {
     margin-top: $menu-bar-height;
     z-index: $z-index-menu-bar;

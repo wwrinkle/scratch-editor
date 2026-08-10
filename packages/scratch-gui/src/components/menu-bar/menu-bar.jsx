@@ -353,7 +353,54 @@ class MenuBar extends React.Component {
                                 description="Fork name, feature, and version shown next to the logo"
                                 id="gui.menuBar.forkInfo"
                                 values={{
-                                    forkName: forkInfo.name,
+                                    forkName: (
+                                        <a
+                                            href="https://soniclogicacademy.com"
+                                            rel="noopener noreferrer"
+                                            target="_blank"
+                                        >
+                                            <svg
+                                                aria-hidden="true"
+                                                className={styles.forkInfoLogo}
+                                                fill="currentColor"
+                                                height="18"
+                                                viewBox="0 0 24 24"
+                                                width="18"
+                                            >
+                                                <rect
+                                                    x="1"
+                                                    y="9"
+                                                    width="3"
+                                                    height="6"
+                                                />
+                                                <rect
+                                                    x="6"
+                                                    y="5"
+                                                    width="3"
+                                                    height="14"
+                                                />
+                                                <rect
+                                                    x="11"
+                                                    y="1"
+                                                    width="3"
+                                                    height="22"
+                                                />
+                                                <rect
+                                                    x="16"
+                                                    y="5"
+                                                    width="3"
+                                                    height="14"
+                                                />
+                                                <rect
+                                                    x="21"
+                                                    y="9"
+                                                    width="3"
+                                                    height="6"
+                                                />
+                                            </svg>
+                                            {forkInfo.name}
+                                        </a>
+                                    ),
                                     forkFeature: forkInfo.feature,
                                     forkVersion: forkInfo.version
                                 }}
