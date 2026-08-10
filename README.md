@@ -8,7 +8,7 @@ packages. Use this if you'd like to learn about how the Scratch editor works or 
 
 ## About this fork
 
-This repository is a **Sonic Logic Academy fork** of the upstream
+This repository is a **[Sonic Logic Academy](https://www.soniclogicacademy.com/) fork** of the upstream
 [scratchfoundation/scratch-editor](https://github.com/scratchfoundation/scratch-editor). It is not affiliated with
 or endorsed by the Scratch Team or the Scratch Foundation. See [FORK_NOTES.md](FORK_NOTES.md) for what's different,
 including the piano roll visualizer added in `scratch-gui`.
