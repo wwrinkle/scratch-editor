@@ -30,18 +30,21 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production npm run --workspaces build",
     "clean": "npm run --workspaces clean",
+    "heroku-postbuild": "npm run build",
     "prepare": "husky install",
     "refresh-gh-workflow": "ts-node scripts/update-gha-workflows.ts",
     "start": "npm --workspace @scratch/scratch-gui start",
     "test": "npm test --workspaces",
     "update-legal": "scripts/update-legal.sh",
-    "version": "cross-env-shell ./scripts/npm-version.sh",
-    "heroku-postbuild": "npm run build"
+    "version": "cross-env-shell ./scripts/npm-version.sh"
   },
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "express": "5.2.1"
   },
   "devDependencies": {
     "@commitlint/cli": "17.8.1",
