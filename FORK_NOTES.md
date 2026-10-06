@@ -12,6 +12,9 @@ Foundation. See [NOTICE](NOTICE) for license and attribution details.
   distinguishing this build from upstream Scratch at a glance.
 - **Fork/version info** shown next to the logo in the menu bar, sourced from
   `packages/scratch-gui/src/lib/fork-info.js`.
+- **"Save to your Scratch account…"** File menu item
+  (`packages/scratch-gui/src/components/save-to-scratch-modal/`). Scratch has no third-party login or save API, so
+  this opens a dialog that downloads the `.sb3` and walks the user through loading it on scratch.mit.edu.
 
 ## Build info plumbing
 

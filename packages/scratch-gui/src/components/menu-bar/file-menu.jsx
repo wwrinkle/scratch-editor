@@ -15,6 +15,7 @@ import useMenuNavigation from '../../hooks/use-menu-navigation';
 import sharedMessages from '../../lib/shared-messages';
 
 import {saveProjectAsCopy} from '../../reducers/project-state';
+import {openSaveToScratchModal} from '../../reducers/modals';
 
 const fileMenu = defineMessage({
     id: 'gui.aria.fileMenu',
@@ -31,6 +32,7 @@ const FileMenu = ({
     onClickSave,
     onClickSaveAsCopy,
     onClickRemix,
+    onOpenSaveToScratchModal,
     onStartSelectingFileUpload,
     getSaveToComputerHandler,
     remixMessage,
@@ -160,6 +162,17 @@ const FileMenu = ({
                             />
                         </MenuItem>
                     )}</SB3Downloader>
+                    <MenuItem
+                        onClick={onOpenSaveToScratchModal}
+                        isDataMenuItem
+                        onParentKeyDown={handleKeyDownOpenMenu}
+                    >
+                        <FormattedMessage
+                            defaultMessage="Save to your Scratch account…"
+                            description="Menu bar item that opens instructions for moving the project to scratch.mit.edu" // eslint-disable-line @stylistic/max-len
+                            id="gui.menuBar.saveToScratchAccount"
+                        />
+                    </MenuItem>
                 </MenuSection>
             </MenuBarMenu>
         </button>
@@ -175,6 +188,7 @@ FileMenu.propTypes = {
     onClickSave: PropTypes.func,
     onClickSaveAsCopy: PropTypes.func,
     onClickRemix: PropTypes.func,
+    onOpenSaveToScratchModal: PropTypes.func.isRequired,
     onClickNew: PropTypes.func.isRequired,
     getSaveToComputerHandler: PropTypes.func.isRequired,
     remixMessage: PropTypes.node,
@@ -186,7 +200,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onClickSaveAsCopy: () => dispatch(saveProjectAsCopy())
+    onClickSaveAsCopy: () => dispatch(saveProjectAsCopy()),
+    onOpenSaveToScratchModal: () => dispatch(openSaveToScratchModal())
 });
 
 export default connect(

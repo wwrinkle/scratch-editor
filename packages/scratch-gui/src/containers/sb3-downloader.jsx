@@ -72,3 +72,5 @@ export default connect(
     mapStateToProps,
     () => ({}) // omit dispatch prop
 )(SB3Downloader);
+
+export {getProjectFilename};
