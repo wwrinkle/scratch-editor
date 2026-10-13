@@ -75,4 +75,51 @@ describe('HashParserHOC', () => {
         fireEvent(window, new HashChangeEvent('hashchange', {newURL: window.location.href}));
         expect(mockSetProjectIdFunc.mock.calls.length).toBe(2);
     });
+    describe('with a project_url query parameter', () => {
+        afterEach(() => {
+            window.history.replaceState(null, '', '/');
+        });
+
+        test('when there is no hash, it passes the project address as projectId', () => {
+            const Component = ({projectId}) => <div>{projectId}</div>;
+            const WrappedComponent = HashParserHOC(Component);
+            window.history.replaceState(null, '', '/?project_url=https://example.com/songs/ear-exercise.sb3');
+            const mockSetProjectIdFunc = jest.fn();
+            render(
+                <WrappedComponent
+                    setProjectId={mockSetProjectIdFunc}
+                    store={store}
+                />
+            );
+            expect(mockSetProjectIdFunc.mock.calls[0][0]).toBe('https://example.com/songs/ear-exercise.sb3');
+        });
+
+        test('a hash project id takes precedence over the project address', () => {
+            const Component = ({projectId}) => <div>{projectId}</div>;
+            const WrappedComponent = HashParserHOC(Component);
+            window.history.replaceState(null, '', '/?project_url=https://example.com/ear-exercise.sb3#1234567');
+            const mockSetProjectIdFunc = jest.fn();
+            render(
+                <WrappedComponent
+                    setProjectId={mockSetProjectIdFunc}
+                    store={store}
+                />
+            );
+            expect(mockSetProjectIdFunc.mock.calls[0][0]).toBe('1234567');
+        });
+
+        test('a non-HTTPS project address is ignored', () => {
+            const Component = ({projectId}) => <div>{projectId}</div>;
+            const WrappedComponent = HashParserHOC(Component);
+            window.history.replaceState(null, '', '/?project_url=http://example.com/ear-exercise.sb3');
+            const mockSetProjectIdFunc = jest.fn();
+            render(
+                <WrappedComponent
+                    setProjectId={mockSetProjectIdFunc}
+                    store={store}
+                />
+            );
+            expect(mockSetProjectIdFunc.mock.calls[0][0]).toBe('0');
+        });
+    });
 });

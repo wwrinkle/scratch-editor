@@ -15,6 +15,11 @@ Foundation. See [NOTICE](NOTICE) for license and attribution details.
 - **"Save to your Scratch account…"** File menu item
   (`packages/scratch-gui/src/components/save-to-scratch-modal/`). Scratch has no third-party login or save API, so
   this opens a dialog that downloads the `.sb3` and walks the user through loading it on scratch.mit.edu.
+- **Open a project from a link** (`packages/scratch-gui/src/lib/project-url.js`). Adding
+  `?project_url=https://…/song.sb3` to the editor's address loads that `.sb3` at startup and names the project after
+  the file, so lesson materials can link straight to a project without it being part of this repository. The
+  address must be HTTPS, and its host must allow cross-origin downloads (CORS); GitHub Pages and raw GitHub files
+  do. A `#123456` Scratch project id in the same address takes precedence.
 
 ## Build info plumbing
 

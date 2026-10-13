@@ -7,6 +7,7 @@ import ProjectFetcherHOC from '../../../src/lib/project-fetcher-hoc.jsx';
 import {LoadingState} from '../../../src/reducers/project-state';
 import {LegacyStorage} from '../../../src/lib/legacy-storage';
 import {IntlProvider} from 'react-intl';
+import {waitFor} from '@testing-library/react';
 
 jest.mock('react-ga');
 
@@ -76,5 +77,80 @@ describe('ProjectFetcherHOC', () => {
                 .toHaveBeenLastCalledWith('100', LoadingState.FETCHING_WITH_ID),
             1
         );
+    });
+    test('when the reduxProjectId is an HTTPS address, it fetches the project from that address', async () => {
+        const projectData = new ArrayBuffer(8);
+        const originalFetch = global.fetch;
+        global.fetch = jest.fn(() => Promise.resolve({
+            ok: true,
+            arrayBuffer: () => Promise.resolve(projectData)
+        }));
+        const mockedOnFetchedProject = jest.fn();
+        const mockedOnSetProjectTitle = jest.fn();
+        const projectUrl = 'https://example.com/songs/ear%20exercise.sb3';
+        const Component = ({projectId}) => <div>{projectId}</div>;
+        const WrappedComponent = ProjectFetcherHOC(Component);
+        const {rerender} = renderWithIntl(
+            <WrappedComponent
+                store={store}
+                onFetchedProjectData={mockedOnFetchedProject}
+                onSetProjectTitle={mockedOnSetProjectTitle}
+            />
+        );
+        rerender(
+            <IntlProvider
+                locale="en"
+                messages={{ }}
+            >
+                <WrappedComponent
+                    store={store}
+                    onFetchedProjectData={mockedOnFetchedProject}
+                    onSetProjectTitle={mockedOnSetProjectTitle}
+                    reduxProjectId={projectUrl}
+                    isFetchingWithId
+                    loadingState={LoadingState.FETCHING_WITH_ID}
+                />
+            </IntlProvider>
+        );
+
+        expect(global.fetch).toHaveBeenLastCalledWith(projectUrl);
+        await waitFor(() => expect(mockedOnFetchedProject)
+            .toHaveBeenLastCalledWith(projectData, LoadingState.FETCHING_WITH_ID));
+        expect(mockedOnSetProjectTitle).toHaveBeenLastCalledWith('ear exercise');
+        global.fetch = originalFetch;
+    });
+    test('when fetching from an HTTPS address fails, it reports an error', async () => {
+        const originalFetch = global.fetch;
+        global.fetch = jest.fn(() => Promise.resolve({ok: false, status: 404}));
+        const mockedOnError = jest.fn();
+        const mockedOnFetchedProject = jest.fn();
+        const Component = ({projectId}) => <div>{projectId}</div>;
+        const WrappedComponent = ProjectFetcherHOC(Component);
+        const {rerender} = renderWithIntl(
+            <WrappedComponent
+                store={store}
+                onError={mockedOnError}
+                onFetchedProjectData={mockedOnFetchedProject}
+            />
+        );
+        rerender(
+            <IntlProvider
+                locale="en"
+                messages={{ }}
+            >
+                <WrappedComponent
+                    store={store}
+                    onError={mockedOnError}
+                    onFetchedProjectData={mockedOnFetchedProject}
+                    reduxProjectId="https://example.com/missing.sb3"
+                    isFetchingWithId
+                    loadingState={LoadingState.FETCHING_WITH_ID}
+                />
+            </IntlProvider>
+        );
+
+        await waitFor(() => expect(mockedOnError).toHaveBeenCalled());
+        expect(mockedOnFetchedProject).not.toHaveBeenCalled();
+        global.fetch = originalFetch;
     });
 });

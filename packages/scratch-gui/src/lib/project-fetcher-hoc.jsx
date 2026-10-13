@@ -6,6 +6,7 @@ import bindAll from 'lodash.bindall';
 import {connect} from 'react-redux';
 
 import {setProjectUnchanged} from '../reducers/project-changed';
+import {setProjectTitle} from '../reducers/project-title';
 import {
     LoadingStates,
     getIsCreatingNew,
@@ -22,6 +23,8 @@ import {
 } from '../reducers/editor-tab';
 
 import log from './log';
+import {getFilenameFromProjectUrl, isProjectUrl} from './project-url';
+import {getProjectTitleFromFilename} from './sb-file-uploader-utils';
 import {GUIStoragePropType} from '../gui-config';
 
 /* Higher Order Component to provide behavior for loading projects by id. If
@@ -34,7 +37,8 @@ const ProjectFetcherHOC = function (WrappedComponent) {
         constructor (props) {
             super(props);
             bindAll(this, [
-                'fetchProject'
+                'fetchProject',
+                'fetchProjectFromUrl'
             ]);
 
             const storage = this.props.storage;
@@ -79,6 +83,9 @@ const ProjectFetcherHOC = function (WrappedComponent) {
             }
         }
         fetchProject (projectId, loadingState) {
+            if (isProjectUrl(projectId)) {
+                return this.fetchProjectFromUrl(projectId, loadingState);
+            }
             const storage = this.props.storage.scratchStorage;
 
             return storage
@@ -97,6 +104,24 @@ const ProjectFetcherHOC = function (WrappedComponent) {
                     log.error(err);
                 });
         }
+        fetchProjectFromUrl (projectUrl, loadingState) {
+            return fetch(projectUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Could not load project from ${projectUrl}: HTTP ${response.status}`);
+                    }
+                    return response.arrayBuffer();
+                })
+                .then(projectData => {
+                    const title = getProjectTitleFromFilename(getFilenameFromProjectUrl(projectUrl));
+                    if (title) this.props.onSetProjectTitle(title);
+                    this.props.onFetchedProjectData(projectData, loadingState);
+                })
+                .catch(err => {
+                    this.props.onError(err);
+                    log.error(err);
+                });
+        }
         render () {
             const {
                  
@@ -108,6 +133,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
                 onError: onErrorProp,
                 onFetchedProjectData: onFetchedProjectDataProp,
                 onProjectUnchanged,
+                onSetProjectTitle,
                 projectHost,
                 projectId,
                 projectToken,
@@ -139,6 +165,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
         onError: PropTypes.func,
         onFetchedProjectData: PropTypes.func,
         onProjectUnchanged: PropTypes.func,
+        onSetProjectTitle: PropTypes.func,
         projectHost: PropTypes.string,
         projectToken: PropTypes.string,
         projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -165,7 +192,8 @@ const ProjectFetcherHOC = function (WrappedComponent) {
         onFetchedProjectData: (projectData, loadingState) =>
             dispatch(onFetchedProjectData(projectData, loadingState)),
         setProjectId: projectId => dispatch(setProjectId(projectId)),
-        onProjectUnchanged: () => dispatch(setProjectUnchanged())
+        onProjectUnchanged: () => dispatch(setProjectUnchanged()),
+        onSetProjectTitle: title => dispatch(setProjectTitle(title))
     });
     // Allow incoming props to override redux-provided props. Used to mock in tests.
     const mergeProps = (stateProps, dispatchProps, ownProps) => Object.assign(

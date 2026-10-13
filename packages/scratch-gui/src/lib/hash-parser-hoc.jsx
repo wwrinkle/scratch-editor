@@ -8,8 +8,10 @@ import {
     getIsFetchingWithoutId,
     setProjectId
 } from '../reducers/project-state';
+import {getProjectUrlFromSearch} from './project-url';
 
-/* Higher Order Component to get the project id from location.hash
+/* Higher Order Component to get the project id from location.hash, or a project
+ * address from `?project_url=` when the hash has no id
  * @param {React.Component} WrappedComponent: component to render
  * @returns {React.Component} component with hash parsing behavior
  */
@@ -38,7 +40,9 @@ const HashParserHOC = function (WrappedComponent) {
         }
         handleHashChange () {
             const hashMatch = window.location.hash.match(/#(\d+)/);
-            const hashProjectId = hashMatch === null ? defaultProjectId : hashMatch[1];
+            const hashProjectId = hashMatch === null ?
+                (getProjectUrlFromSearch(window.location.search) ?? defaultProjectId) :
+                hashMatch[1];
             this.props.setProjectId(hashProjectId.toString());
         }
         render () {
