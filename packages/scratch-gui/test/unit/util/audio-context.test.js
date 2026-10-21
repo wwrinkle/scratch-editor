@@ -5,6 +5,9 @@ WebAudioTestAPI.setState({
 });
 
 import SharedAudioContext from '../../../src/lib/audio/shared-audio-context';
+import keepAudioContextRunning from '../../../src/lib/audio/keep-audio-context-running';
+
+jest.mock('../../../src/lib/audio/keep-audio-context-running', () => jest.fn());
 
 describe('Shared Audio Context', () => {
     const audioContext = new AudioContext();
@@ -34,5 +37,10 @@ describe('Shared Audio Context', () => {
 
         const sharedAudioContext2 = new SharedAudioContext();
         expect(sharedAudioContext2).toMatchObject(audioContext);
+    });
+
+    test('keeps the shared AudioContext running once it is created', () => {
+        expect(keepAudioContextRunning).toHaveBeenCalledTimes(1);
+        expect(keepAudioContextRunning).toHaveBeenCalledWith(new SharedAudioContext());
     });
 });

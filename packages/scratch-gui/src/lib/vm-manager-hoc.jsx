@@ -6,6 +6,8 @@ import {connect} from 'react-redux';
 import VM from '@scratch/scratch-vm';
 import AudioEngine from 'scratch-audio';
 
+import keepAudioContextRunning from './audio/keep-audio-context-running';
+
 import {setProjectUnchanged} from '../reducers/project-changed';
 import {
     LoadingStates,
@@ -30,6 +32,7 @@ const vmManagerHOC = function (WrappedComponent) {
         componentDidMount () {
             if (!this.props.vm.initialized) {
                 this.audioEngine = new AudioEngine();
+                keepAudioContextRunning(this.audioEngine.audioContext);
                 this.props.vm.attachAudioEngine(this.audioEngine);
                 this.props.vm.setCompatibilityMode(true);
                 this.props.vm.initialized = true;

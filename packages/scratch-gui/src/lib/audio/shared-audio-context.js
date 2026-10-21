@@ -1,6 +1,8 @@
 import StartAudioContext from 'startaudiocontext';
 import bowser from 'bowser';
 
+import keepAudioContextRunning from './keep-audio-context-running';
+
 let AUDIO_CONTEXT;
 
 if (!bowser.msie) {
@@ -16,6 +18,7 @@ if (!bowser.msie) {
         AUDIO_CONTEXT = new (window.AudioContext ||
             window.webkitAudioContext)();
         StartAudioContext(AUDIO_CONTEXT);
+        keepAudioContextRunning(AUDIO_CONTEXT);
     };
     document.addEventListener('mousedown', initAudioContext);
     document.addEventListener('touchstart', initAudioContext);

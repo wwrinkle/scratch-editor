@@ -11,6 +11,9 @@ import VM from '@scratch/scratch-vm';
 import {LoadingState} from '../../../src/reducers/project-state';
 
 import vmManagerHOC from '../../../src/lib/vm-manager-hoc.jsx';
+import keepAudioContextRunning from '../../../src/lib/audio/keep-audio-context-running';
+
+jest.mock('../../../src/lib/audio/keep-audio-context-running', () => jest.fn());
 
 describe('VMManagerHOC', () => {
     const mockStore = configureStore();
@@ -54,6 +57,22 @@ describe('VMManagerHOC', () => {
 
         // But vm should not be started automatically
         expect(vm.start).not.toHaveBeenCalled();
+    });
+    test('when it initializes the vm, it keeps the audio engine context running', () => {
+        keepAudioContextRunning.mockClear();
+        const Component = () => (<div />);
+        const WrappedComponent = vmManagerHOC(Component);
+        render(
+            <WrappedComponent
+                isPlayerOnly
+                isStarted={false}
+                store={store}
+                vm={vm}
+            />
+        );
+        const audioEngine = vm.attachAudioEngine.mock.calls[0][0];
+        expect(keepAudioContextRunning).toHaveBeenCalledTimes(1);
+        expect(keepAudioContextRunning).toHaveBeenCalledWith(audioEngine.audioContext);
     });
     test('when it mounts in editor mode, the vm is initialized and started', () => {
         const Component = () => (<div />);
